@@ -4,7 +4,7 @@ import ReactDOM from 'react-dom'
 const Header = ({
   course
 }) => (
-<h1>{course}</h1>
+  <h1>{course}</h1>
 )
 
 const ContentCourse = ({
@@ -13,7 +13,7 @@ const ContentCourse = ({
 }) => (
   <p>
         {part} {exercise}
-      </p>
+  </p>
 )
 const Content = ({
   content,
