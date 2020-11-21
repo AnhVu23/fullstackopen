@@ -70,10 +70,25 @@ const App = () => {
   }
   const onFormSubmit = (e) => {
     e.preventDefault()
-    const foundExistPerson =
-      persons.findIndex((person) => person.name === newName) > -1
+    const foundPersonIndex = persons.findIndex((person) => person.name === newName)
+    const foundExistPerson = foundPersonIndex > -1
     if (foundExistPerson) {
-      alert(`${newName} is already added to phonebook`)
+      if (
+        window.confirm(
+          `${newName} is already added to phonebook, replace the old number with a new one`
+        )
+      ) {
+        phoneBookService
+          .editOne(persons[foundPersonIndex].id, {
+            ...persons[foundPersonIndex],
+            number: newPhoneNum,
+          })
+          .then((res) => {
+            setNewName('')
+            setNewPhoneNum('')
+            getPhoneBook()
+          })
+      }
     } else {
       const newPerson = {
         name: newName,
@@ -83,12 +98,12 @@ const App = () => {
         .createOne(newPerson)
         .then((res) => {
           getPhoneBook()
+          setNewName('')
+          setNewPhoneNum('')
         })
         .catch((e) => {
           console.error(e)
         })
-      setNewName('')
-      setNewPhoneNum('')
     }
   }
 

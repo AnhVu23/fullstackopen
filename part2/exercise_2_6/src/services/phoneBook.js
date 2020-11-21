@@ -40,3 +40,15 @@ export const deleteOne = (id) => {
       throw e
     })
 }
+
+export const editOne = (id, data) => {
+    return axios
+    .put(`http://localhost:3001/persons/${id}`, data)
+    .then(res => {
+        console.log(res)
+        return res
+    })
+    .catch(e => {
+        throw e
+    })
+}
