@@ -1,6 +1,5 @@
-import React, { useState, useEffect } from "react"
-import axios from 'axios'
-
+import React, { useState, useEffect } from 'react'
+import phoneBookService from './services/phoneBook'
 const Filter = ({ search, onSearchChange }) => {
   return (
     <div>
@@ -45,18 +44,18 @@ const Persons = ({ persons, search }) =>
 
 const App = () => {
   const [persons, setPersons] = useState([])
-  const [newName, setNewName] = useState("")
-  const [newPhoneNum, setNewPhoneNum] = useState("")
-  const [search, setSearch] = useState("")
+  const [newName, setNewName] = useState('')
+  const [newPhoneNum, setNewPhoneNum] = useState('')
+  const [search, setSearch] = useState('')
 
   useEffect(() => {
-    axios.get('http://localhost:3001/persons')
-    .then(res => {
-      setPersons(res.data)
-    })
-    .catch(e => {
-      console.error(e)
-    })
+    phoneBookService.getAll
+      .then((persons) => {
+        setPersons(persons)
+      })
+      .catch((e) => {
+        console.error(e)
+      })
   }, [])
   const onFormSubmit = (e) => {
     e.preventDefault()
@@ -70,8 +69,8 @@ const App = () => {
         phoneNum: newPhoneNum,
       }
       setPersons(persons.concat(newPerson))
-      setNewName("")
-      setNewPhoneNum("")
+      setNewName('')
+      setNewPhoneNum('')
     }
   }
   return (
