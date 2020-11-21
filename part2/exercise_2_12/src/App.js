@@ -1,13 +1,24 @@
 import React, { useState, useEffect } from "react"
 import axios from "axios"
-const CountryItem = ({ country }) => (
-  <>
-    <p key={country.id}>{country.name}</p>
-  </>
-)
+const CountryItem = ({ country }) => {
+  const [showDetail, setShowDetail] = useState(false)
+  return (
+    <React.Fragment key={country.id}>
+      <div>
+        <span>{country.name}</span>
+        <button onClick={() => setShowDetail((prevState) => !prevState)}>
+          <span>show</span>
+        </button>
+      </div>
+      {showDetail ? <div>
+        <CountryDetailItem country={country} />
+      </div> : null}
+    </React.Fragment>
+  )
+}
 
 const CountryDetailItem = ({ country }) => (
-  <div>
+  <div key={country.id}>
     <h1>{country.name}</h1>
     <p>capital {country.capital}</p>
     <p>population {country.population}</p>
@@ -17,7 +28,7 @@ const CountryDetailItem = ({ country }) => (
         <li>{lang.name}</li>
       ))}
     </ul>
-    <img src={country.flag} alt={'national flag'} width={200} height={200}/>
+    <img src={country.flag} alt={"national flag"} width={200} height={200} />
   </div>
 )
 const CountryList = ({ countries, search }) => {
