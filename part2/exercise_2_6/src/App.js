@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react'
-import phoneBookService from './services/phoneBook'
+import * as phoneBookService from './services/phoneBook'
 const Filter = ({ search, onSearchChange }) => {
   return (
     <div>
@@ -38,7 +38,7 @@ const Persons = ({ persons, search }) =>
     )
     .map((person) => (
       <p key={person.name}>
-        {person.name} {person.phoneNum}
+        {person.name} {person.number}
       </p>
     ))
 
@@ -49,14 +49,18 @@ const App = () => {
   const [search, setSearch] = useState('')
 
   useEffect(() => {
-    phoneBookService.getAll
+    getPhoneBook()
+  }, [])
+
+  const getPhoneBook = () => {
+    phoneBookService.getAll()
       .then((persons) => {
         setPersons(persons)
       })
       .catch((e) => {
         console.error(e)
       })
-  }, [])
+  }
   const onFormSubmit = (e) => {
     e.preventDefault()
     const foundExistPerson =
@@ -66,9 +70,16 @@ const App = () => {
     } else {
       const newPerson = {
         name: newName,
-        phoneNum: newPhoneNum,
+        number: newPhoneNum,
       }
-      setPersons(persons.concat(newPerson))
+      phoneBookService
+        .createOne(newPerson)
+        .then((res) => {
+          getPhoneBook()
+        })
+        .catch((e) => {
+          console.error(e)
+        })
       setNewName('')
       setNewPhoneNum('')
     }

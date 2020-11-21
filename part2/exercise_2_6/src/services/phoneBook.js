@@ -1,3 +1,4 @@
+/* eslint-disable import/no-anonymous-default-export */
 /**
  * Phone book service
  *
@@ -7,8 +8,8 @@
  */
 import axios from 'axios'
 
-const getAll = () => {
-  axios
+export const getAll = () => {
+  return axios
     .get('http://localhost:3001/persons')
     .then((res) => {
       return res.data
@@ -18,8 +19,8 @@ const getAll = () => {
     })
 }
 
-const createOne = (data) => {
-  axios.post('http://localhost:3001/persons', {data})
+export const createOne = (data) => {
+  return axios.post('http://localhost:3001/persons', data)
   .then(res => {
       return res
   })
@@ -27,5 +28,3 @@ const createOne = (data) => {
     throw e
   })
 }
-
-export default {getAll, createOne}
