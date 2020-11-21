@@ -54,6 +54,7 @@ const App = () => {
   const [newPhoneNum, setNewPhoneNum] = useState('')
   const [search, setSearch] = useState('')
   const [successMessage, setSuccessMessage] = useState(null)
+  const [errorMessage, setErrorMessage] = useState(null)
 
   useEffect(() => {
     getPhoneBook()
@@ -121,7 +122,13 @@ const App = () => {
         .then((res) => {
           getPhoneBook()
         })
-        .catch((e) => console.error(e))
+        .catch((e) => {
+          if (e.response.status === 404) {
+            setErrorMessage(`Information of ${person.name} has already been removed from server`)
+            setTimeout(() => setErrorMessage(null), 3000)
+          }
+          console.error(e)
+        })
     }
   }
   return (
@@ -130,6 +137,11 @@ const App = () => {
       {successMessage ? (
         <div className="success-message-box">
           <p className="success-message-text">{successMessage}</p>
+        </div>
+      ) : null}
+      {errorMessage ? (
+        <div className="error-message-box">
+          <p className="error-message-text">{errorMessage}</p>
         </div>
       ) : null}
       <Filter
