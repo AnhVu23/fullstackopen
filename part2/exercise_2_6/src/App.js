@@ -1,4 +1,5 @@
-import React, { useState } from "react"
+import React, { useState, useEffect } from "react"
+import axios from 'axios'
 
 const Filter = ({ search, onSearchChange }) => {
   return (
@@ -41,14 +42,22 @@ const Persons = ({ persons, search }) =>
         {person.name} {person.phoneNum}
       </p>
     ))
-    
+
 const App = () => {
-  const [persons, setPersons] = useState([
-    { name: "Arto Hellas", phoneNum: "040-123456" },])
+  const [persons, setPersons] = useState([])
   const [newName, setNewName] = useState("")
   const [newPhoneNum, setNewPhoneNum] = useState("")
   const [search, setSearch] = useState("")
 
+  useEffect(() => {
+    axios.get('http://localhost:3001/persons')
+    .then(res => {
+      setPersons(res.data)
+    })
+    .catch(e => {
+      console.error(e)
+    })
+  }, [])
   const onFormSubmit = (e) => {
     e.preventDefault()
     const foundExistPerson =
