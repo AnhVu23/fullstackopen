@@ -53,6 +53,7 @@ const App = () => {
   const [newName, setNewName] = useState('')
   const [newPhoneNum, setNewPhoneNum] = useState('')
   const [search, setSearch] = useState('')
+  const [successMessage, setSuccessMessage] = useState(null)
 
   useEffect(() => {
     getPhoneBook()
@@ -70,7 +71,9 @@ const App = () => {
   }
   const onFormSubmit = (e) => {
     e.preventDefault()
-    const foundPersonIndex = persons.findIndex((person) => person.name === newName)
+    const foundPersonIndex = persons.findIndex(
+      (person) => person.name === newName
+    )
     const foundExistPerson = foundPersonIndex > -1
     if (foundExistPerson) {
       if (
@@ -87,6 +90,8 @@ const App = () => {
             setNewName('')
             setNewPhoneNum('')
             getPhoneBook()
+            setSuccessMessage(`Edited ${persons[foundPersonIndex].name}`)
+            setTimeout(() => setSuccessMessage(null), 3000)
           })
       }
     } else {
@@ -100,6 +105,8 @@ const App = () => {
           getPhoneBook()
           setNewName('')
           setNewPhoneNum('')
+          setSuccessMessage(`Added ${newPerson.name}`)
+            setTimeout(() => setSuccessMessage(null), 3000)
         })
         .catch((e) => {
           console.error(e)
@@ -118,8 +125,13 @@ const App = () => {
     }
   }
   return (
-    <div>
+    <div className='App'>
       <h2>Phonebook</h2>
+      {successMessage ? (
+        <div className="success-message-box">
+          <p className="success-message-text">{successMessage}</p>
+        </div>
+      ) : null}
       <Filter
         search={search}
         onSearchChange={(e) => setSearch(e.target.value)}
