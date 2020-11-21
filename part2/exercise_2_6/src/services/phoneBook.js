@@ -20,11 +20,23 @@ export const getAll = () => {
 }
 
 export const createOne = (data) => {
-  return axios.post('http://localhost:3001/persons', data)
-  .then(res => {
+  return axios
+    .post('http://localhost:3001/persons', data)
+    .then((res) => {
       return res
-  })
-  .catch((e) => {
-    throw e
-  })
+    })
+    .catch((e) => {
+      throw e
+    })
+}
+
+export const deleteOne = (id) => {
+  return axios
+    .delete(`http://localhost:3001/persons/${id}`)
+    .then((res) => {
+      return res
+    })
+    .catch((e) => {
+      throw e
+    })
 }
