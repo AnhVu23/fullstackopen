@@ -7,6 +7,7 @@ const bodyParser = require('body-parser')
 
 const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/persons')
+const morgan = require('morgan')
 
 const apiRouter = express.Router()
 apiRouter.use('/persons', usersRouter)
@@ -42,6 +43,15 @@ app.use(express.urlencoded({ extended: false }))
 app.use(cookieParser())
 app.use(bodyParser.json())
 app.use(express.static(path.join(__dirname, 'public')))
+
+morgan.token('body', function (req) {
+  if (req.method === 'POST') {
+    return JSON.stringify(req.body)
+  }
+  return ''
+ })
+app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
+
 
 app.use('/', indexRouter)
 app.use('/api', apiRouter)

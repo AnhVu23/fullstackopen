@@ -1,4 +1,4 @@
-var express = require('express')
+const express = require('express')
 const { HttpError, BadRequest } = require('http-errors')
 var router = express.Router()
 
