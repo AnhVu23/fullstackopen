@@ -1,4 +1,5 @@
 var express = require('express')
+const { HttpError, BadRequest } = require('http-errors')
 var router = express.Router()
 
 const personList = [
@@ -30,14 +31,28 @@ router
     return res.send(personList)
   })
   .post(function (req, res, next) {
-    const newPerson = {...req.body}
-    // Random an id with big enough range
-    newPerson.id = Number(Math.random().toFixed(3)) * 1000 + personList.length + 1
-    personList.push(newPerson)
-    console.log(personList)
-    return res.header({'Location': `/api/persons/${newPerson.id}`}).send({
-      'Location': `/api/persons/${newPerson.id}`
-    })
+    try {
+      if (!req.body.name) {
+        throw new BadRequest('Name is missing')
+      }
+      if (!req.body.number) {
+        throw new BadRequest('Number is missing')
+      }
+      const foundExistPerson = personList.find(person => person.name === req.body.name)
+      if (!foundExistPerson) {
+        throw new BadRequest('Name must be unique')
+      }
+      const newPerson = { ...req.body }
+      // Random an id with big enough range
+      newPerson.id =
+        Number(Math.random().toFixed(3)) * 1000 + personList.length + 1
+      personList.push(newPerson)
+      return res.header({ Location: `/api/persons/${newPerson.id}` }).send({
+        Location: `/api/persons/${newPerson.id}`,
+      })
+    } catch (e) {
+      return res.status(400).send(e)
+    }
   })
 
 router
