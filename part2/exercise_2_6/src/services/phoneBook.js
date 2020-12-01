@@ -10,7 +10,7 @@ import axios from 'axios'
 
 export const getAll = () => {
   return axios
-    .get('http://localhost:3001/persons')
+    .get('http://localhost:3001/api/persons')
     .then((res) => {
       return res.data
     })
@@ -21,7 +21,7 @@ export const getAll = () => {
 
 export const createOne = (data) => {
   return axios
-    .post('http://localhost:3001/persons', data)
+    .post('http://localhost:3001/api/persons', data)
     .then((res) => {
       return res
     })
@@ -32,7 +32,7 @@ export const createOne = (data) => {
 
 export const deleteOne = (id) => {
   return axios
-    .delete(`http://localhost:3001/persons/${id}`)
+    .delete(`http://localhost:3001/api/persons/${id}`)
     .then((res) => {
       return res
     })
@@ -43,7 +43,7 @@ export const deleteOne = (id) => {
 
 export const editOne = (id, data) => {
     return axios
-    .put(`http://localhost:3001/persons/${id}`, data)
+    .put(`http://localhost:3001/api/persons/${id}`, data)
     .then(res => {
         console.log(res)
         return res
