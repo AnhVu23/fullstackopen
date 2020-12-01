@@ -6,7 +6,6 @@ const logger = require('morgan')
 const bodyParser = require('body-parser')
 const cors = require('cors')
 
-const indexRouter = require('./routes/index')
 const usersRouter = require('./routes/persons')
 const morgan = require('morgan')
 
@@ -39,6 +38,7 @@ const personList = [
 const app = express()
 
 app.use(logger('dev'))
+app.use(express.static('build'))
 app.use(cors())
 app.use(express.json())
 app.use(express.urlencoded({ extended: false }))
@@ -54,8 +54,6 @@ morgan.token('body', function (req) {
  })
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
-
-app.use('/', indexRouter)
 app.use('/api', apiRouter)
 app.use('/info', (req, res) => {
   return res.send(`<p>Phonebook has info for ${personList.length} people</p>

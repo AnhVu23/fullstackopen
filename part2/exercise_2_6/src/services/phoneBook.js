@@ -8,9 +8,10 @@
  */
 import axios from 'axios'
 
+const baseUrl = 'api/persons'
 export const getAll = () => {
   return axios
-    .get('http://localhost:3001/api/persons')
+    .get(baseUrl)
     .then((res) => {
       return res.data
     })
@@ -21,7 +22,7 @@ export const getAll = () => {
 
 export const createOne = (data) => {
   return axios
-    .post('http://localhost:3001/api/persons', data)
+    .post(baseUrl, data)
     .then((res) => {
       return res
     })
@@ -32,7 +33,7 @@ export const createOne = (data) => {
 
 export const deleteOne = (id) => {
   return axios
-    .delete(`http://localhost:3001/api/persons/${id}`)
+    .delete(`${baseUrl}/${id}`)
     .then((res) => {
       return res
     })
@@ -43,7 +44,7 @@ export const deleteOne = (id) => {
 
 export const editOne = (id, data) => {
     return axios
-    .put(`http://localhost:3001/api/persons/${id}`, data)
+    .put(`${baseUrl}/${id}`, data)
     .then(res => {
         console.log(res)
         return res

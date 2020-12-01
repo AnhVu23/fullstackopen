@@ -3,9 +3,11 @@
   "version": "0.0.0",
   "private": true,
   "scripts": {
+    "build:ui": "rm -rf build && cd ../part2/exercise_2_6 && npm run build --prod && cp -r build ../../part3",
     "start": "node index.js",
     "dev": "nodemon index.js",
-    "deploy": "git push heroku main"
+    "deploy": "git push heroku master",
+    "deploy:full": "npm run build:ui && git add . && git commit -m uibuild && npm run deploy"
   },
   "dependencies": {
     "body-parser": "^1.19.0",
