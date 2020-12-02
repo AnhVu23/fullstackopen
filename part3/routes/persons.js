@@ -1,5 +1,5 @@
 const express = require('express')
-const { HttpError, BadRequest } = require('http-errors')
+const { BadRequest } = require('http-errors')
 const router = express.Router()
 const Person = require('../models/person')
 
