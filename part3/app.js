@@ -13,29 +13,6 @@ const morgan = require('morgan')
 const apiRouter = express.Router()
 apiRouter.use('/persons', usersRouter)
 
-const personList = [
-  {
-    name: 'Arto Hellas',
-    number: '040-123456',
-    id: 1,
-  },
-  {
-    name: 'Ada Lovelace',
-    number: '39-44-5323523',
-    id: 2,
-  },
-  {
-    name: 'Dan Abramov',
-    number: '12-43-234345',
-    id: 3,
-  },
-  {
-    name: 'Mary Poppendieck',
-    number: '39-23-6423122',
-    id: 4,
-  },
-]
-
 const app = express()
 
 app.use(logger('dev'))
@@ -66,7 +43,7 @@ app.use(function (req, res, next) {
   next(createError(404))
 })
 
-const errorHandler = (error, request, response, next) => {
+const errorHandler = (error, request, response) => {
   console.log('error', error.name)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
@@ -79,7 +56,7 @@ const errorHandler = (error, request, response, next) => {
 app.use(errorHandler)
 
 // error handler
-app.use(function (err, req, res, next) {
+app.use(function (err, req, res) {
   // set locals, only providing error in development
   res.locals.message = err.message
   res.locals.error = req.app.get('env') === 'development' ? err : {}
