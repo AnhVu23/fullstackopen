@@ -7,8 +7,12 @@ const Person = require('../models/person')
 router
   .route('/')
   .get(async function (req, res, next) {
-    const allPersons = await Person.find({})
-    return res.send(allPersons)
+    try {
+      const allPersons = await Person.find({})
+      return res.send(allPersons)
+    } catch (e) {
+      next(e)
+    }
   })
   .post(async function (req, res, next) {
     try {
@@ -27,28 +31,43 @@ router
         number: req.body.number,
       })
       const createdPerson = await newPerson.save()
-      return res.header({ Location: `/api/persons/${newPerson.id}` }).json(createdPerson)
+      return res
+        .header({ Location: `/api/persons/${newPerson.id}` })
+        .json(createdPerson)
     } catch (e) {
-      return res.status(400).send(e)
+      next(e)
     }
   })
 
 router
   .route('/:id')
   .get(async function (req, res, next) {
-    const foundPerson = await Person.findById(parseInt(req.params.id, 10))
-    if (!foundPerson) {
-      return res.status(404).send()
+    try {
+      const foundPerson = await Person.findById(req.params.id)
+      if (!foundPerson) {
+        return res.status(404).send()
+      }
+      return res.send(foundPerson)
+    } catch (e) {
+      next(e)
     }
-    return res.send(foundPerson)
+  })
+  .put(async function (req, res, next) {
+    try {
+      await Person.findByIdAndUpdate(req.params.id, req.body)
+      return res.status(204).send()
+    } catch(e) {
+      next(e)
+    }
   })
   .delete(async function (req, res, next) {
-    const foundPerson = await Person.findById(parseInt(req.params.id, 10))
-    if (foundPersonIndex === -1) {
-      return res.status(404).send()
+    try {
+      await Person.findByIdAndRemove(req.params.id)
+      return res.status(204).send()
+    } catch (e) {
+      console.log(e)
+      next(e)
     }
-    personList.splice(foundPersonIndex, 1)
-    return res.status(204).send()
   })
 
 module.exports = router
