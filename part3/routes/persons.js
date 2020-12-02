@@ -22,10 +22,6 @@ router
       if (!req.body.number) {
         throw new BadRequest('Number is missing')
       }
-      // const foundExistPerson = personList.find(person => person.name === req.body.name)
-      // if (!foundExistPerson) {
-      //   throw new BadRequest('Name must be unique')
-      // }
       const newPerson = new Person({
         name: req.body.name,
         number: req.body.number,
@@ -35,6 +31,7 @@ router
         .header({ Location: `/api/persons/${newPerson.id}` })
         .json(createdPerson)
     } catch (e) {
+      console.log(e.message)
       next(e)
     }
   })
