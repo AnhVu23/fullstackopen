@@ -67,13 +67,13 @@ app.use(function (req, res, next) {
 })
 
 const errorHandler = (error, request, response, next) => {
-  console.log('error', error.message)
+  console.log('error', error.name)
   if (error.name === 'CastError') {
     return response.status(400).send({ error: 'malformatted id' })
-  } else if (error.name === 'ValidationError') {
+  } else if (error.name === 'ValidationError' || error.name === 'BadRequestError') {
     return response.status(400).send({error: error.message})
   }
-  return response.status(500).send(error)
+  return response.status(500).send({error: error.message})
 }
 
 app.use(errorHandler)

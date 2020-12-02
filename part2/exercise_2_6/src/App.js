@@ -67,6 +67,7 @@ const App = () => {
         setPersons(persons)
       })
       .catch((e) => {
+        setErrorMessage(e.response.data.error)
         console.error(e)
       })
   }
@@ -94,6 +95,10 @@ const App = () => {
             setSuccessMessage(`Edited ${persons[foundPersonIndex].name}`)
             setTimeout(() => setSuccessMessage(null), 3000)
           })
+          .catch(e => {
+            console.log(e)
+            setErrorMessage(e.response.data.error)
+          })
       }
     } else {
       const newPerson = {
@@ -111,6 +116,7 @@ const App = () => {
         })
         .catch((e) => {
           console.error(e)
+          setErrorMessage(e.response.data.error)
         })
     }
   }
@@ -127,6 +133,7 @@ const App = () => {
             setErrorMessage(`Information of ${person.name} has already been removed from server`)
             setTimeout(() => setErrorMessage(null), 3000)
           }
+          setErrorMessage(e.response.data.error)
           console.error(e)
         })
     }
