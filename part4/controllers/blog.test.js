@@ -21,14 +21,24 @@ const initialBlogs = [
 ]
 
 beforeEach(async () => {
-    await Blog.deleteMany({})
-    await Promise.all(initialBlogs.map(blog => {
-        const newBlog = new Blog(blog)
-        return newBlog.save()
-    }))
+  await Blog.deleteMany({})
+  await Promise.all(
+    initialBlogs.map((blog) => {
+      const newBlog = new Blog(blog)
+      return newBlog.save()
+    })
+  )
 })
 
-// test('Blogs are returned as json and the result contain 2 blogs', )
+describe('Get all blogs', () => {
+  test('Blogs are returned as json and the result contain 2 blogs', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+    expect(response.body).toHaveLength(2)
+  })
+})
 
 afterAll(() => {
   mongoose.connection.close()
