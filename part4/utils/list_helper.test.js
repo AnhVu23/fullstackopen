@@ -140,3 +140,69 @@ describe('most blogs', () => {
       })
     })
   })
+
+  describe('most likes', () => {
+    const blogs = [
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Anh Vu',
+        url:
+          'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 5,
+        __v: 0,
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url:
+          'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 2,
+        __v: 0,
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url:
+          'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 2,
+        __v: 0,
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Edsger W. Dijkstra',
+        url:
+          'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 2,
+        __v: 0,
+      },
+      {
+        _id: '5a422aa71b54a676234d17f8',
+        title: 'Go To Statement Considered Harmful',
+        author: 'Helsinki Open',
+        url:
+          'http://www.u.arizona.edu/~rubinson/copyright_violations/Go_To_Considered_Harmful.html',
+        likes: 3,
+        __v: 0,
+      },
+    ]
+  
+    test('Test for a sample blogs', () => {
+      const result = listHelper.mostLikes(blogs)
+      expect(result).toEqual({
+          author: 'Edsger W. Dijkstra',
+          likes: 6
+      })
+    })
+  
+    test('when list has no blog, return author with empty string and number of likes is 0', () => {
+      const result = listHelper.mostLikes([])
+      expect(result).toEqual({
+          author: '',
+          likes: 0
+      })
+    })
+  })
