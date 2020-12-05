@@ -33,10 +33,6 @@ morgan.token('body', function (req) {
 app.use(morgan(':method :url :status :res[content-length] - :response-time ms :body'))
 
 app.use('/api', apiRouter)
-app.use('/info', (req, res) => {
-  return res.send(`<p>Phonebook has info for ${personList.length} people</p>
-    <p>${new Date()}</p>`)
-})
 
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -54,16 +50,5 @@ const errorHandler = (error, request, response) => {
 }
 
 app.use(errorHandler)
-
-// error handler
-app.use(function (err, req, res) {
-  // set locals, only providing error in development
-  res.locals.message = err.message
-  res.locals.error = req.app.get('env') === 'development' ? err : {}
-
-  // render the error page
-  res.status(err.status || 500)
-  res.render('error')
-})
 
 module.exports = app
