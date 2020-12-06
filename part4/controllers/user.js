@@ -20,6 +20,7 @@ router
         hashPassword,
       })
       const savedUser = await user.save()
+      delete savedUser.hashPassword
       return res.status(201).json(savedUser)
     } catch (e) {
       next(e)

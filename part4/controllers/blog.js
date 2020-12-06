@@ -44,20 +44,6 @@ router
 router
   .use(middleware.authorizationHandler)
   .route('/:id')
-  .delete(async (request, response, next) => {
-    try {
-      const blog = await Blog.findById(request.params.id).populate('user')
-      if (blog.user._id.toString() !== request.userId.toString()) {
-        throw new Forbidden(`You can only delete your own blog`)
-      }
-      await Blog.deleteOne({_id: request.params.id})
-      return response.status(204).send()
-    } catch (e) {
-      next(e)
-    }
-  })
-router
-  .route('/:id')
   .get(async (request, response, next) => {
     try {
       const blog = await Blog.findById(request.params.id)
@@ -72,6 +58,18 @@ router
   .put(async (request, response, next) => {
     try {
       await Blog.findByIdAndUpdate(request.params.id, request.body)
+      return response.status(204).send()
+    } catch (e) {
+      next(e)
+    }
+  })
+  .delete(async (request, response, next) => {
+    try {
+      const blog = await Blog.findById(request.params.id).populate('user')
+      if (blog.user._id.toString() !== request.userId.toString()) {
+        throw new Forbidden(`You can only delete your own blog`)
+      }
+      await Blog.deleteOne({ _id: request.params.id })
       return response.status(204).send()
     } catch (e) {
       next(e)

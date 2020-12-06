@@ -1,8 +1,11 @@
 const app = require('../app')
 const supertest = require('supertest')
+const bcrypt = require('bcrypt')
 const _ = require('lodash')
 const mongoose = require('mongoose')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const config = require('../utils/config')
 
 const api = supertest(app)
 
@@ -21,14 +24,37 @@ const initialBlogs = [
   },
 ]
 
+const initialUsers = [
+  {
+    username: 'anhvu234',
+    name: 'Anh Vu',
+    password: 'admin123',
+  },
+]
+let token = ''
 beforeEach(async () => {
   await Blog.deleteMany({})
+  await User.deleteMany({})
+  const users = await Promise.all(initialUsers.map(async (user) => {
+    const saltRounds = config.SALT_ROUNDS
+    const cloneUser = {...user}
+    cloneUser.hashPassword = await bcrypt.hash(cloneUser.password, saltRounds)
+    delete cloneUser.password
+    const newUser = new User(cloneUser)
+    return newUser.save()
+  }))
   await Promise.all(
     initialBlogs.map((blog) => {
       const newBlog = new Blog(blog)
+      newBlog.user = users[0].id
       return newBlog.save()
     })
   )
+  const loginRes = await api.post('/api/auth').send({
+    username: 'anhvu234',
+    password: 'admin123',
+  })
+  token = `bearer ${loginRes.body.token}`
 })
 
 describe('Get all blogs', () => {
@@ -37,7 +63,7 @@ describe('Get all blogs', () => {
       .get('/api/blogs')
       .expect(200)
       .expect('Content-Type', /application\/json/)
-    expect(response.body).toHaveLength(2)
+    expect(response.body).toHaveLength(initialBlogs.length)
   })
 })
 
@@ -53,9 +79,22 @@ describe('Test unique identifier', () => {
 })
 
 describe('Create new blog', () => {
+  test('Return 401 when jwt token is incorrect', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        title: 'Blog 3',
+        author: 'Anh Vu',
+        url: 'https://google.com/third-blog',
+        likes: 0,
+      })
+      .expect(401)
+  })
+
   test('Check the length of list after creating new blog', async () => {
     await api
       .post('/api/blogs')
+      .set('authorization', token)
       .send({
         title: 'Blog 3',
         author: 'Anh Vu',
@@ -71,6 +110,7 @@ describe('Create new blog', () => {
   test('Check the default value for likes, if not specified in the request', async () => {
     const response = await api
       .post('/api/blogs')
+      .set('authorization', token)
       .send({
         title: 'Blog 3',
         author: 'Anh Vu',
@@ -84,6 +124,7 @@ describe('Create new blog', () => {
   test('Validation for missing url', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send({
         title: 'Blog 3',
         author: 'Anh Vu',
@@ -94,6 +135,7 @@ describe('Create new blog', () => {
   test('Validation for missing title', async () => {
     await api
       .post('/api/blogs')
+      .set('Authorization', token)
       .send({
         author: 'Anh Vu',
         url: 'https://google.com/third-blog',
@@ -104,13 +146,13 @@ describe('Create new blog', () => {
 
 describe('Delete a blog', () => {
   test('Delete a blog from incorrect id format', async () => {
-    await api.delete('/api/blogs/3').expect(500)
+    await api.delete('/api/blogs/3').set('Authorization', token).expect(400)
   })
 
   test('Delete a blog successfully', async () => {
     const response = await api.get('/api/blogs')
     const blogId = response.body[0].id
-    await api.delete(`/api/blogs/${blogId}`).expect(204)
+    await api.delete(`/api/blogs/${blogId}`).set('Authorization', token).expect(204)
     const currentRes = await api.get('/api/blogs')
     expect(currentRes.body).toHaveLength(1)
   })
@@ -120,10 +162,11 @@ describe('Edit a blog', () => {
   test('Edit a blog from incorrect id format', async () => {
     await api
       .put('/api/blogs/3')
+      .set('Authorization', token)
       .send({
         likes: 10,
       })
-      .expect(500)
+      .expect(400)
   })
 
   test('Edit a blog successfully', async () => {
@@ -131,11 +174,12 @@ describe('Edit a blog', () => {
     const blogId = response.body[0].id
     await api
       .put(`/api/blogs/${blogId}`)
+      .set('Authorization', token)
       .send({
         likes: 10,
       })
       .expect(204)
-    const currentRes = await api.get(`/api/blogs/${blogId}`)
+    const currentRes = await api.get(`/api/blogs/${blogId}`).set('Authorization', token)
     expect(currentRes.body.likes).toBe(10)
   })
 })
