@@ -35,12 +35,12 @@ router
   })
 
 const checkField = (body, key) => {
-    if (!body[key]) {
-        throw new BadRequest(`${key} is required`)
-      }
-      if (body[key].length <= 3) {
-        throw new BadRequest(`${key} must be at least 3 characters length`)
-      }
+  if (!body[key]) {
+    throw new BadRequest(`${key} is required`)
+  }
+  if (body[key].length <= 3) {
+    throw new BadRequest(`${key} must be at least 3 characters length`)
+  }
 }
 
 module.exports = router
