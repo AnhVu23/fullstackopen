@@ -2,6 +2,8 @@ const { BadRequest } = require('http-errors')
 const express = require('express')
 const router = express.Router()
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const middleware = require('../utils/middleware')
 
 /* GET users listing. */
 router
@@ -14,7 +16,10 @@ router
       next(e)
     }
   })
-  .post(async (request, response, next) => {
+router
+.use(middleware.authorizationHandler)
+.route('/')
+.post(async (request, response, next) => {
     try {
       if (!request.body.url) {
         throw new BadRequest('Url is missing')
@@ -25,7 +30,9 @@ router
       if (!request.body.likes) {
         request.body.likes = 0
       }
+      // request.body.user= 
       const blog = new Blog(request.body)
+      blog.user = await User.findById(request.userId)
       const result = await blog.save()
       return response.status(201).json(result)
     } catch (e) {
