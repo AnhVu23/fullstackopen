@@ -1,4 +1,4 @@
-const { BadRequest } = require('http-errors')
+const { BadRequest, Forbidden, NotFound } = require('http-errors')
 const express = require('express')
 const router = express.Router()
 const Blog = require('../models/blog')
@@ -6,20 +6,18 @@ const User = require('../models/user')
 const middleware = require('../utils/middleware')
 
 /* GET users listing. */
+router.route('/').get(async (request, response, next) => {
+  try {
+    const blogs = await Blog.find({}).populate('user')
+    return response.json(blogs)
+  } catch (e) {
+    next(e)
+  }
+})
 router
+  .use(middleware.authorizationHandler)
   .route('/')
-  .get(async (request, response, next) => {
-    try {
-      const blogs = await Blog.find({}).populate('user')
-      return response.json(blogs)
-    } catch (e) {
-      next(e)
-    }
-  })
-router
-.use(middleware.authorizationHandler)
-.route('/')
-.post(async (request, response, next) => {
+  .post(async (request, response, next) => {
     try {
       if (!request.body.url) {
         throw new BadRequest('Url is missing')
@@ -30,9 +28,12 @@ router
       if (!request.body.likes) {
         request.body.likes = 0
       }
-      // request.body.user= 
       const blog = new Blog(request.body)
-      blog.user = await User.findById(request.userId)
+      const foundUser = await User.findById(request.userId)
+      if (!foundUser) {
+        throw new NotFound(`Can't find user with this id`)
+      }
+      blog.user = request.userId
       const result = await blog.save()
       return response.status(201).json(result)
     } catch (e) {
@@ -40,6 +41,21 @@ router
     }
   })
 
+router
+  .use(middleware.authorizationHandler)
+  .route('/:id')
+  .delete(async (request, response, next) => {
+    try {
+      const blog = await Blog.findById(request.params.id).populate('user')
+      if (blog.user._id.toString() !== request.userId.toString()) {
+        throw new Forbidden(`You can only delete your own blog`)
+      }
+      await Blog.deleteOne({_id: request.params.id})
+      return response.status(204).send()
+    } catch (e) {
+      next(e)
+    }
+  })
 router
   .route('/:id')
   .get(async (request, response, next) => {
@@ -49,14 +65,6 @@ router
         return response.status(404).send()
       }
       return response.status(200).json(blog)
-    } catch (e) {
-      next(e)
-    }
-  })
-  .delete(async (request, response, next) => {
-    try {
-      await Blog.findByIdAndRemove(request.params.id)
-      return response.status(204).send()
     } catch (e) {
       next(e)
     }
