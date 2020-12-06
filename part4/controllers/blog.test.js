@@ -48,13 +48,14 @@ describe('Test unique identifier', () => {
       expect(blog.id).toBeDefined()
       return blog.id
     })
-    expect(_.uniq(idArray)).toHaveLength(2)
+    expect(_.uniq(idArray)).toHaveLength(initialBlogs.length)
   })
 })
 
 describe('Create new blog', () => {
-    test('Check the length of list after creating new blog', async () => {
-      await api.post('/api/blogs')
+  test('Check the length of list after creating new blog', async () => {
+    await api
+      .post('/api/blogs')
       .send({
         title: 'Blog 3',
         author: 'Anh Vu',
@@ -63,40 +64,58 @@ describe('Create new blog', () => {
       })
       .expect(201)
       .expect('Content-Type', /application\/json/)
-      const blogs = await api.get('/api/blogs')
-      expect(blogs.body).toHaveLength(3)
-    })
-
-    test('Check the default value for likes, if not specified in the request', async () => {
-        const response = await api.post('/api/blogs')
-        .send({
-          title: 'Blog 3',
-          author: 'Anh Vu',
-          url: 'https://google.com/third-blog',
-        })
-        .expect(201)
-        .expect('Content-Type', /application\/json/)
-        expect(response.body.likes).toBe(0)
-      })
-    
-      test('Validation for missing url', async () => {
-        await api.post('/api/blogs')
-        .send({
-          title: 'Blog 3',
-          author: 'Anh Vu'
-        })
-        .expect(400)
-      })
-
-      test('Validation for missing title', async () => {
-        await api.post('/api/blogs')
-        .send({
-          author: 'Anh Vu',
-          url: 'https://google.com/third-blog',
-        })
-        .expect(400)
-      })
+    const blogs = await api.get('/api/blogs')
+    expect(blogs.body).toHaveLength(initialBlogs.length + 1)
   })
+
+  test('Check the default value for likes, if not specified in the request', async () => {
+    const response = await api
+      .post('/api/blogs')
+      .send({
+        title: 'Blog 3',
+        author: 'Anh Vu',
+        url: 'https://google.com/third-blog',
+      })
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+    expect(response.body.likes).toBe(0)
+  })
+
+  test('Validation for missing url', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        title: 'Blog 3',
+        author: 'Anh Vu',
+      })
+      .expect(400)
+  })
+
+  test('Validation for missing title', async () => {
+    await api
+      .post('/api/blogs')
+      .send({
+        author: 'Anh Vu',
+        url: 'https://google.com/third-blog',
+      })
+      .expect(400)
+  })
+})
+
+describe('Delete a blog', () => {
+  test('Delete a blog from incorrect id format', async () => {
+    await api.delete('/api/blogs/3').expect(500)
+  })
+
+  test('Delete a blog successfully', async () => {
+    const response = await api.get('/api/blogs')
+    const blogId = response.body[0].id
+    await api.delete(`/api/blogs/${blogId}`).expect(204)
+    const currentRes = await api.get('/api/blogs')
+    expect(currentRes.body).toHaveLength(1)
+  })
+
+})
 
 afterAll(() => {
   mongoose.connection.close()
