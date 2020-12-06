@@ -27,7 +27,7 @@ router
   })
   .get(async (req, res, next) => {
     try {
-      const users = await User.find({})
+      const users = await User.find({}).populate('blogs')
       return res.json(users)
     } catch (e) {
       next(e)

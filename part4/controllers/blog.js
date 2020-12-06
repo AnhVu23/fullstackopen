@@ -8,7 +8,7 @@ router
   .route('/')
   .get(async (request, response, next) => {
     try {
-      const blogs = await Blog.find({})
+      const blogs = await Blog.find({}).populate('user')
       return response.json(blogs)
     } catch (e) {
       next(e)
