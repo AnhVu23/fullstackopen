@@ -35,6 +35,17 @@ router
 
 router
   .route('/:id')
+  .get(async (request, response, next) => {
+    try {
+      const blog = await Blog.findById(request.params.id)
+      if (!blog) {
+        return response.status(404).send()
+      }
+      return response.status(200).json(blog)
+    } catch (e) {
+      next(e)
+    }
+  })
   .delete(async (request, response, next) => {
     try {
       await Blog.findByIdAndRemove(request.params.id)
@@ -45,6 +56,8 @@ router
   })
   .put(async (request, response, next) => {
     try {
+      await Blog.findByIdAndUpdate(request.params.id, request.body)
+      return response.status(204).send()
     } catch (e) {
       next(e)
     }

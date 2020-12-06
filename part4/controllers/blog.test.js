@@ -117,6 +117,31 @@ describe('Delete a blog', () => {
 
 })
 
+describe('Edit a blog', () => {
+    test('Edit a blog from incorrect id format', async () => {
+      await api
+      .put('/api/blogs/3')
+      .send({
+          likes: 10
+      })
+      .expect(500)
+    })
+  
+    test('Edit a blog successfully', async () => {
+      const response = await api.get('/api/blogs')
+      const blogId = response.body[0].id
+      await api
+      .put(`/api/blogs/${blogId}`)
+      .send({
+          likes: 10
+      })
+      .expect(204)
+      const currentRes = await api.get(`/api/blogs/${blogId}`)
+      expect(currentRes.body.likes).toBe(10)
+    })
+  
+  })
+
 afterAll(() => {
   mongoose.connection.close()
 })
