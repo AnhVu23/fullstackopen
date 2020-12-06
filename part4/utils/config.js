@@ -3,7 +3,9 @@ let MONGODB_URI = process.env.MONGODB_URI
 if (process.env.NODE_ENV === 'test') {
     MONGODB_URI = process.env.TEST_MONGODB_URI
 }
+const SALT_ROUNDS = parseInt(process.env.SALT_ROUNDS, 10)
 module.exports = {
     PORT,
-    MONGODB_URI
+    MONGODB_URI,
+    SALT_ROUNDS
 }
