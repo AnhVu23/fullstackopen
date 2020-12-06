@@ -23,17 +23,12 @@ app.use(methodOverride())
 app.use('/', router.main)
 app.use('/api/blogs', router.blogRouter)
 app.use('/api/users', router.userRouter)
+app.use('/api/auth', router.authRouter)
 
 // catch 404 and forward to error handler
 app.use(middleware.unknownEndpoint)
 
 // error handler
 app.use(middleware.errorHandler)
-
-process.on('uncaughtException', function (err) {
-  console.log('**************************');
-  console.log('* [process.on(uncaughtException)]: err:', err);
-  console.log('**************************');
-});
 
 module.exports = app

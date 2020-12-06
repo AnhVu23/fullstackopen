@@ -1,4 +1,5 @@
 const mongoose = require('mongoose')
+const bcrypt = require('bcrypt')
 
 const url = process.env.MONGODB_URI
 
@@ -46,5 +47,12 @@ userSchema.set('toJSON', {
     delete returnedObject.__v
   },
 })
+
+userSchema.methods.comparePassword = function(candidatePassword, cb) {
+  bcrypt.compare(candidatePassword, this.hashPassword, function(err, isMatch) {
+      if (err) return cb(err);
+      cb(null, isMatch);
+  });
+};
 
 module.exports = mongoose.model('User', userSchema)

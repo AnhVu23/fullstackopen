@@ -1,7 +1,7 @@
 const express = require('express')
 const bcrypt = require('bcrypt')
 const router = express.Router()
-const User = require('../models/User')
+const User = require('../models/user')
 const config = require('../utils/config')
 const { BadRequest } = require('http-errors')
 
@@ -28,7 +28,10 @@ router
   .get(async (req, res, next) => {
     try {
       const users = await User.find({}).populate('blogs')
-      return res.json(users)
+      return res.json(users.map(user => {
+        delete user.hashPassword
+        return user
+      }))
     } catch (e) {
       next(e)
     }
