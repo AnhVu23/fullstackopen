@@ -2,8 +2,6 @@ const mongoose = require('mongoose')
 
 const url = process.env.MONGODB_URI
 
-console.log('connecting to', url)
-
 mongoose
   .connect(url, {
     useNewUrlParser: true,
@@ -19,9 +17,15 @@ mongoose
   })
 
 const blogSchema = new mongoose.Schema({
-  title: String,
+  title: {
+    type: String,
+    required: true,
+  },
   author: String,
-  url: String,
+  url: {
+    type: String,
+    required: true,
+  },
   likes: Number,
 })
 
