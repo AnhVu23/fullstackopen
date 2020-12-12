@@ -25,7 +25,7 @@ const Login = ({
             </div>
             <div>
                 <span>password</span>
-                <input value={loginForm.password} name='password' onChange={onInputChange}/>
+                <input value={loginForm.password} type='password' name='password' onChange={onInputChange}/>
             </div>
             <button type='submit'>Login</button>
         </form>

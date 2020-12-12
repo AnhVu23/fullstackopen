@@ -36,3 +36,25 @@
     transform: rotate(360deg);
   }
 }
+
+.success-message {
+  background-color: lightgray;
+  padding: 1rem;
+  border-radius: .5rem;
+  border: 3px solid green;
+}
+
+.success-message-text {
+  color: green;
+}
+
+.error-message {
+  background-color: lightgray;
+  padding: 1rem;
+  border-radius: .5rem;
+  border: 3px solid red;
+}
+
+.error-message-text {
+  color: red;
+}
