@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Blog from './Blog'
 const BlogCreate = ({
-    onLogin
+    onBlogCreate
 }) => {
     const [blogForm, setLoginForm] = useState({
         title: '',
@@ -15,18 +15,18 @@ const BlogCreate = ({
 
     const onFormSubmit = async e => {
         e.preventDefault()
-        onLogin({...blogForm})
+        onBlogCreate({...blogForm})
     }
     
     return (
         <form onSubmit={onFormSubmit}>
             <h2>create new</h2>
             <div>
-                <span>username</span>
+                <span>title</span>
                 <input value={blogForm.title} name='title' onChange={onInputChange}/>
             </div>
             <div>
-                <span>password</span>
+                <span>author</span>
                 <input value={blogForm.author} name='author' onChange={onInputChange}/>
             </div>
             <div>

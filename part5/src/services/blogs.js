@@ -1,9 +1,17 @@
 import axios from 'axios'
-const baseUrl = '/api/blogs'
+import config from '../config/config'
 
-const getAll = () => {
-  const request = axios.get(baseUrl)
-  return request.then(response => response.data)
+const getAll = async () => {
+  const res = await axios.get(`${config.baseUrl}/api/blogs`)
+  return res.data
 }
 
-export default { getAll }
+const createOne = async (data) => {
+  const res = await axios.post(`${config.baseUrl}/api/blogs`, data, 
+  {headers: {
+    authorization: `bearer ${window.localStorage.getItem('blogapp_token')}`
+  }})
+  return res.data
+}
+
+export default { getAll, createOne }
