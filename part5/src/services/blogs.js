@@ -22,4 +22,10 @@ const updateOne = async (id, data) => {
   return res.data
 }
 
-export default { getAll, createOne, updateOne }
+const deleteOne = async id => {
+  await axios.delete(`${config.baseUrl}/api/blogs/${id}`, 
+  {headers: {
+    authorization: `bearer ${window.localStorage.getItem('blogapp_token')}`
+  }})
+}
+export default { getAll, createOne, updateOne, deleteOne }

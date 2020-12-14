@@ -81,6 +81,21 @@ const App = () => {
       setTimeout(() => setErrorMessage(null), 2000)
     }
   }
+
+  const onDeleteClick = async (id) => {
+    try {
+      await blogService.deleteOne(id)
+      const foundBlogIndex = blogs.findIndex(blog => blog.id === id)
+      if (foundBlogIndex !== -1) {
+        const cloneBlogs = [...blogs]
+        cloneBlogs.splice(foundBlogIndex, 1)
+        setBlogs(cloneBlogs)
+      }
+    } catch (e) {
+      setErrorMessage(e.response.data.error)
+      setTimeout(() => setErrorMessage(null), 2000)
+    }
+  }
   const renderBlogs = () => (
     <div>
       {successMessage !== null ? (
@@ -97,7 +112,7 @@ const App = () => {
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
       {blogs.sort((prevBlog, nextBlog) => nextBlog.likes - prevBlog.likes).map((blog) => (
-        <Blog key={blog.id} blog={blog} onLikeClick={() => onLikeClick(blog)} />
+        <Blog key={blog.id} blog={blog} onLikeClick={() => onLikeClick(blog)} onDeleteClick={onDeleteClick}/>
       ))}
     </div>
   )

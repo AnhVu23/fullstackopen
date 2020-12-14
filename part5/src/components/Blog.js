@@ -1,5 +1,5 @@
 import React from 'react'
-const Blog = ({ blog, onLikeClick }) => {
+const Blog = ({ blog, onLikeClick, onDeleteClick }) => {
   const [visible, setVisible] = React.useState(false)
   const blogStyle = {
     paddingTop: 10,
@@ -8,6 +8,15 @@ const Blog = ({ blog, onLikeClick }) => {
     borderWidth: 1,
     marginBottom: 5,
   }
+
+  const onDelete = () => {
+    if (window.confirm(`Remove blog ${blog.title} by ${blog.author}`)) {
+      onDeleteClick(blog.id)
+    }
+  }
+
+  const currentUser = window.localStorage.getItem('blogapp_user')
+  const parsedUser = currentUser ? JSON.parse(currentUser) : null
   return (
     <div style={blogStyle}>
       <div>
@@ -26,6 +35,7 @@ const Blog = ({ blog, onLikeClick }) => {
             <button onClick={onLikeClick}>like</button>
           </div>
           <p>{blog.user ? blog.user.name : ''}</p>
+          {parsedUser && parsedUser.username === blog.user.username ? <button type='button' style={{backgroundColor: 'lightblue'}} onClick={onDelete}>remove</button> : null}
         </>
       ) : null}
     </div>
