@@ -14,4 +14,12 @@ const createOne = async (data) => {
   return res.data
 }
 
-export default { getAll, createOne }
+const updateOne = async (id, data) => {
+  const res = await axios.put(`${config.baseUrl}/api/blogs/${id}`, data, 
+  {headers: {
+    authorization: `bearer ${window.localStorage.getItem('blogapp_token')}`
+  }})
+  return res.data
+}
+
+export default { getAll, createOne, updateOne }

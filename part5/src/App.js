@@ -17,12 +17,21 @@ const App = () => {
   const createBlogRef = React.useRef()
 
   useEffect(() => {
-    blogService.getAll().then((blogs) => setBlogs(blogs))
+    getBlogs()
     const user = window.localStorage.getItem('blogapp_user')
     if (user) {
       setUser(JSON.parse(user))
     }
   }, [])
+
+  const getBlogs = async () => {
+    try {
+      const blogs = await blogService.getAll()
+      setBlogs(blogs)
+    } catch (e) {
+      throw e
+    }
+  }
 
   const onLogin = async (data) => {
     try {
@@ -57,6 +66,21 @@ const App = () => {
     }
   }
 
+  const onLikeClick = async (blog) => {
+    try {
+      const clone = { ...blog }
+      clone.likes = clone.likes + 1
+      clone._id = blog.id
+      clone.user._id = clone.user.id
+      delete clone.user.id
+      delete clone.id
+      await blogService.updateOne(blog.id, clone)
+      await getBlogs()
+    } catch (e) {
+      setErrorMessage(e.response.data.error)
+      setTimeout(() => setErrorMessage(null), 2000)
+    }
+  }
   const renderBlogs = () => (
     <div>
       {successMessage !== null ? (
@@ -69,13 +93,11 @@ const App = () => {
         <span>{user.name} logged in</span>
         <button onClick={onLogoutClick}>logout</button>
       </div>
-      <Toggle buttonLabel='new note'
-              ref={createBlogRef}
-      >
+      <Toggle buttonLabel="new note" ref={createBlogRef}>
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
       {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+        <Blog key={blog.id} blog={blog} onLikeClick={() => onLikeClick(blog)} />
       ))}
     </div>
   )

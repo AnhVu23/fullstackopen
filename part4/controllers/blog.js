@@ -60,6 +60,7 @@ router
       await Blog.findByIdAndUpdate(request.params.id, request.body)
       return response.status(204).send()
     } catch (e) {
+      console.log(e)
       next(e)
     }
   })
