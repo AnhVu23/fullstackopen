@@ -1,21 +1,23 @@
 import React, {useState, useEffect} from 'react'
 import Blog from './Blog'
+const initialBlogState = {
+    title: '',
+    author: '',
+    url: ''
+}
 const BlogCreate = ({
     onBlogCreate
 }) => {
-    const [blogForm, setLoginForm] = useState({
-        title: '',
-        author: '',
-        url: ''
-    })
+    const [blogForm, setBlogForm] = useState({...initialBlogState})
 
     const onInputChange = e => {
-        setLoginForm({...blogForm, [e.target.name]: e.target.value})
+        setBlogForm({...blogForm, [e.target.name]: e.target.value})
     }
 
     const onFormSubmit = async e => {
         e.preventDefault()
-        onBlogCreate({...blogForm})
+        await onBlogCreate({...blogForm})
+        setBlogForm(initialBlogState)
     }
     
     return (
