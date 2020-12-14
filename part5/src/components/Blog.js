@@ -35,7 +35,15 @@ const Blog = ({ blog, onLikeClick, onDeleteClick }) => {
             <button onClick={onLikeClick}>like</button>
           </div>
           <p>{blog.user ? blog.user.name : ''}</p>
-          {parsedUser && parsedUser.username === blog.user.username ? <button type='button' style={{backgroundColor: 'lightblue'}} onClick={onDelete}>remove</button> : null}
+          {parsedUser && parsedUser.username === blog.user.username ? (
+            <button
+              type="button"
+              style={{ backgroundColor: 'lightblue' }}
+              onClick={onDelete}
+            >
+              remove
+            </button>
+          ) : null}
         </>
       ) : null}
     </div>

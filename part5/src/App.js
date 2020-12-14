@@ -25,12 +25,8 @@ const App = () => {
   }, [])
 
   const getBlogs = async () => {
-    try {
-      const blogs = await blogService.getAll()
-      setBlogs(blogs)
-    } catch (e) {
-      throw e
-    }
+    const blogs = await blogService.getAll()
+    setBlogs(blogs)
   }
 
   const onLogin = async (data) => {
@@ -85,7 +81,7 @@ const App = () => {
   const onDeleteClick = async (id) => {
     try {
       await blogService.deleteOne(id)
-      const foundBlogIndex = blogs.findIndex(blog => blog.id === id)
+      const foundBlogIndex = blogs.findIndex((blog) => blog.id === id)
       if (foundBlogIndex !== -1) {
         const cloneBlogs = [...blogs]
         cloneBlogs.splice(foundBlogIndex, 1)
@@ -111,9 +107,16 @@ const App = () => {
       <Toggle buttonLabel="new note" ref={createBlogRef}>
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
-      {blogs.sort((prevBlog, nextBlog) => nextBlog.likes - prevBlog.likes).map((blog) => (
-        <Blog key={blog.id} blog={blog} onLikeClick={() => onLikeClick(blog)} onDeleteClick={onDeleteClick}/>
-      ))}
+      {blogs
+        .sort((prevBlog, nextBlog) => nextBlog.likes - prevBlog.likes)
+        .map((blog) => (
+          <Blog
+            key={blog.id}
+            blog={blog}
+            onLikeClick={() => onLikeClick(blog)}
+            onDeleteClick={onDeleteClick}
+          />
+        ))}
     </div>
   )
 

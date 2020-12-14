@@ -1,4 +1,4 @@
-import React, {useImperativeHandle} from 'react'
+import React, { useImperativeHandle } from 'react'
 import PropTypes from 'props-type'
 
 const Toggle = React.forwardRef((props, ref) => {
@@ -30,7 +30,9 @@ const Toggle = React.forwardRef((props, ref) => {
 })
 
 Toggle.propTypes = {
-  buttonLabel: PropTypes.string.isRequired
+  buttonLabel: PropTypes.string.isRequired,
 }
+
+Toggle.displayName = 'Toggle'
 
 export default Toggle
