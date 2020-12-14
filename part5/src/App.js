@@ -96,7 +96,7 @@ const App = () => {
       <Toggle buttonLabel="new note" ref={createBlogRef}>
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
-      {blogs.map((blog) => (
+      {blogs.sort((prevBlog, nextBlog) => nextBlog.likes - prevBlog.likes).map((blog) => (
         <Blog key={blog.id} blog={blog} onLikeClick={() => onLikeClick(blog)} />
       ))}
     </div>
