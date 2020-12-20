@@ -67,13 +67,15 @@ const App = () => {
       const clone = { ...blog }
       clone.likes = clone.likes + 1
       clone._id = blog.id
-      clone.user._id = clone.user.id
-      delete clone.user.id
+      if (typeof clone.user !== 'string') {
+        clone.user._id = clone.user.id
+        delete clone.user.id
+      }
       delete clone.id
       await blogService.updateOne(blog.id, clone)
       await getBlogs()
     } catch (e) {
-      setErrorMessage(e.response.data.error)
+      setErrorMessage(e.response ? e.response.data.error : e.message)
       setTimeout(() => setErrorMessage(null), 2000)
     }
   }

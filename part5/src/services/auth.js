@@ -8,6 +8,7 @@ const login = async (data) => {
     JSON.stringify({
       username: res.data.username,
       name: res.data.name,
+      id: res.data.id
     })
   )
   return res
