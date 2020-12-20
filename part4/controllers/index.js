@@ -3,6 +3,7 @@ const router = express.Router();
 const userRouter = require('./user')
 const blogRouter = require('./blog')
 const authRouter = require('./auth')
+const testRouter = require('./test')
 
 /* GET home page. */
 router.get('/', function(req, res) {
@@ -13,5 +14,6 @@ module.exports = {
   userRouter,
   blogRouter,
   main: router,
-  authRouter
+  authRouter,
+  testRouter,
 }

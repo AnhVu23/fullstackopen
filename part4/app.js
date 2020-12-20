@@ -24,6 +24,9 @@ app.use('/', router.main)
 app.use('/api/blogs', router.blogRouter)
 app.use('/api/users', router.userRouter)
 app.use('/api/auth', router.authRouter)
+if (process.env.NODE_ENV === 'test') {
+  app.use('/api/testing', router.testRouter)
+}
 
 // catch 404 and forward to error handler
 app.use(middleware.unknownEndpoint)
