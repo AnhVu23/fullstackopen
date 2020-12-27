@@ -30,11 +30,12 @@ const App = () => {
     setTimeout(() => dispatch(removeNotification()), 2000)
   }
 
-  const onFormSubmit = event => {
+  const onFormSubmit = async event => {
     event.preventDefault()
     const content = event.target.content.value
     event.target.content.value = ''
-    dispatch(createAnecdote(content))
+    const newNote = await anecdoteService.create(content)
+    dispatch(createAnecdote(newNote))
   }
 
   const onFilterChange = (value) => {

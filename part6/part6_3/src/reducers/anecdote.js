@@ -24,10 +24,10 @@ const vote = (id) => ({
   }
 })
 
-const createAnecdote = (content) => ({
+const createAnecdote = (newAnec) => ({
   type: 'CREATE',
   payload: {
-    content
+    newAnec
   }
 })
 
@@ -50,11 +50,7 @@ const reducer = (state = initialState, action) => {
       cloneArray.splice(foundAnecdoteIndex, 1, cloneAnec)
       return cloneArray.sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
     case 'CREATE':
-      return state.concat([{
-        content: action.payload.content,
-        id: getId(),
-        votes: 0
-      }]).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
+      return state.concat([action.payload.newAnec]).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
     case 'SET_ANECDOTES':
       return action.payload.data
     default:
