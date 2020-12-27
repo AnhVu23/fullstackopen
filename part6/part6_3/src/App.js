@@ -5,7 +5,7 @@ import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 
 const App = () => {
-  const anecdotes = useSelector(state => state)
+  const anecdotes = useSelector(state => state.anecdote)
   const dispatch = useDispatch()
 
   const voteAnecdote = (id) => {
