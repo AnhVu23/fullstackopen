@@ -31,6 +31,13 @@ const createAnecdote = (content) => ({
   }
 })
 
+const setAnecdotes = (data) => ({
+  type: 'SET_ANECDOTES',
+  payload: {
+    data
+  }
+})
+
 const initialState = anecdotesAtStart.map(asObject).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
 
 const reducer = (state = initialState, action) => {
@@ -48,6 +55,8 @@ const reducer = (state = initialState, action) => {
         id: getId(),
         votes: 0
       }]).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
+    case 'SET_ANECDOTES':
+      return action.payload.data
     default:
       return state
   }
@@ -58,4 +67,5 @@ export default reducer
 export {
   vote,
   createAnecdote,
+  setAnecdotes,
 }
