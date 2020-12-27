@@ -2,12 +2,17 @@ const initialState = {
   message: '',
   isShown: false,
 }
-const displayNotification = (message) => ({
-  type: 'DISPLAY_NOTIFICATION',
-  payload: {
-    message,
-  },
-})
+const displayNotification = (message, timeout) => {
+  return async dispatch => {
+    dispatch({
+      type: 'DISPLAY_NOTIFICATION',
+      payload: {
+        message,
+      },
+    })
+    setTimeout(() => removeNotification(), timeout)
+  }
+}
 
 const removeNotification = () => ({
   type: 'REMOVE_NOTIFICATION',
