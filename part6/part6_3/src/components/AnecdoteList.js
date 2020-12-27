@@ -8,7 +8,7 @@ const AnecdoteList = ({ anecdotes, filter, voteAnecdote, displayNotification }) 
     const cloneAnec = {...foundAnec}
     cloneAnec.votes = cloneAnec.votes + 1
     voteAnecdote(id, cloneAnec)
-    displayNotification(`you voted '${foundAnec ? foundAnec.content : ''}'`, 5)
+    displayNotification(`you voted '${foundAnec ? foundAnec.content : ''}'`, 2)
   }
 
   return anecdotes.filter(item => item.content.toLowerCase().includes(filter.filter.toLowerCase()))
