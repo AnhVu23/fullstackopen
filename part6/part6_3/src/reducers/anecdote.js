@@ -18,12 +18,17 @@ const asObject = (anecdote) => {
   }
 }
 
-const vote = (id) => ({
-  type: 'VOTE',
-  payload: {
-    id,
+const vote = (id, data) => {
+  return async dispatch => {
+    await anecdoteService.vote(id, data)
+    dispatch({
+      type: 'VOTE',
+      payload: {
+        id,
+      }
+    })
   }
-})
+}
 
 const createAnecdote = (content) => {
   return async dispatch => {

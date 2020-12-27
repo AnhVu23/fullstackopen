@@ -17,9 +17,11 @@ const App = () => {
     dispatch(getAnecdotes())
   }, [])
 
-  const voteAnecdote = (id) => {
-    dispatch(vote(id))
+  const voteAnecdote = async (id) => {
     const foundAnec = anecdotes.find(anec => anec.id === id)
+    const cloneAnec = {...foundAnec}
+    cloneAnec.votes = cloneAnec.votes + 1
+    dispatch(vote(id, cloneAnec))
     dispatch(displayNotification(`you voted '${foundAnec ? foundAnec.content : ''}'`))
     setTimeout(() => dispatch(removeNotification()), 2000)
   }
