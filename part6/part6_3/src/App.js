@@ -4,10 +4,13 @@ import {vote, createAnecdote} from './reducers/anecdote'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
+import Filter from './components/Filter'
 import { displayNotification, removeNotification } from './reducers/notification'
+import { updateFilter } from './reducers/filter'
 
 const App = () => {
   const anecdotes = useSelector(state => state.anecdote)
+  const filter = useSelector(state => state.filter)
   const dispatch = useDispatch()
 
   const voteAnecdote = (id) => {
@@ -24,11 +27,16 @@ const App = () => {
     dispatch(createAnecdote(content))
   }
 
+  const onFilterChange = (value) => {
+    dispatch(updateFilter(value))
+  }
+
   return (
     <div>
       <Notification/>
       <h2>Anecdotes</h2>
-      <AnecdoteList anecdotes={anecdotes} voteAnecdote={voteAnecdote}/>
+      <Filter filter={filter} onFilterChange={onFilterChange}/>
+      <AnecdoteList anecdotes={anecdotes.filter(item => item.content.toLowerCase().includes(filter.filter.toLowerCase()))} voteAnecdote={voteAnecdote}/>
       <AnecdoteForm onFormSubmit={onFormSubmit}/>
     </div>
   )
