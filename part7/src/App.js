@@ -1,5 +1,5 @@
 import React, { useState } from 'react'
-import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link, useParams, use, useHistory } from 'react-router-dom'
 
 const Menu = () => {
   const padding = {
@@ -20,16 +20,28 @@ const Menu = () => {
   )
 }
 
-const AnecdoteList = ({ anecdotes }) => (
+const AnecdoteList = ({ anecdotes, onItemClick }) => (
   <div>
     <h2>Anecdotes</h2>
     <ul>
       {anecdotes.map((anecdote) => (
-        <li key={anecdote.id}>{anecdote.content}</li>
+        <li key={anecdote.id}><Link to={`/anecdotes/${anecdote.id}`}>{anecdote.content}</Link></li>
       ))}
     </ul>
   </div>
 )
+
+const Anecdote = ({anecdotes}) => {
+  const id = useParams().id
+  const anecdote = anecdotes.find(anec => anec.id === id)
+  return (
+    <div>
+    <h2>{anecdote.content}</h2>
+    <p>has {anecdote.votes} votes</p>
+    <p>for more info see {anecdote.info}</p>
+  </div>
+  )
+}
 
 const About = () => (
   <div>
@@ -71,6 +83,7 @@ const CreateNew = (props) => {
   const [content, setContent] = useState('')
   const [author, setAuthor] = useState('')
   const [info, setInfo] = useState('')
+  const history = useHistory()
 
   const handleSubmit = (e) => {
     e.preventDefault()
@@ -80,6 +93,7 @@ const CreateNew = (props) => {
       info,
       votes: 0,
     })
+    history.push('/')
   }
 
   return (
@@ -116,7 +130,7 @@ const CreateNew = (props) => {
   )
 }
 
-const App = () => {
+const App = (props) => {
   const [anecdotes, setAnecdotes] = useState([
     {
       content: 'If it hurts, do it more often',
@@ -139,6 +153,8 @@ const App = () => {
   const addNew = (anecdote) => {
     anecdote.id = (Math.random() * 10000).toFixed(0)
     setAnecdotes(anecdotes.concat(anecdote))
+    setNotification(`a new anecdote ${anecdote.content} created!`)
+    setTimeout(() => setNotification(null), 10000)
   }
 
   const anecdoteById = (id) => anecdotes.find((a) => a.id === id)
@@ -153,7 +169,7 @@ const App = () => {
 
     setAnecdotes(anecdotes.map((a) => (a.id === id ? voted : a)))
   }
-
+  
   return (
     <Router>
       <div>
@@ -161,14 +177,18 @@ const App = () => {
         <Menu />
         <Switch>
           <Route exact path="/">
-            <AnecdoteList anecdotes={anecdotes} />
+            {notification ? <p>{notification}</p> : null}
+            <AnecdoteList anecdotes={anecdotes}/>
           </Route>
 
           <Route path="/about">
             <About />
           </Route>
-          <Route path="create">
+          <Route path="/create">
             <CreateNew addNew={addNew} />
+          </Route>
+          <Route path='/anecdotes/:id'>
+            <Anecdote anecdotes={anecdotes}/>
           </Route>
         </Switch>
         <Footer />
