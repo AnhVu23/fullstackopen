@@ -34,6 +34,16 @@
       "id": "39772",
       "content": "new note",
       "votes": 0
+    },
+    {
+      "id": "50209",
+      "content": "new second note",
+      "votes": 0
+    },
+    {
+      "id": "18873",
+      "content": "third note",
+      "votes": 0
     }
   ]
 }

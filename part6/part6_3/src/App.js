@@ -1,13 +1,12 @@
 import React, {useEffect} from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import {vote, createAnecdote, setAnecdotes} from './reducers/anecdote'
+import {vote, createAnecdote, getAnecdotes} from './reducers/anecdote'
 import AnecdoteForm from './components/AnecdoteForm'
 import AnecdoteList from './components/AnecdoteList'
 import Notification from './components/Notification'
 import Filter from './components/Filter'
 import { displayNotification, removeNotification } from './reducers/notification'
 import { updateFilter } from './reducers/filter'
-import anecdoteService from './services/anecdote'
 
 const App = () => {
   const anecdotes = useSelector(state => state.anecdote)
@@ -15,13 +14,8 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    getAllAnecdotes()
+    dispatch(getAnecdotes())
   }, [])
-
-  const getAllAnecdotes = async () => {
-    const data = await anecdoteService.getAll()
-    dispatch(setAnecdotes(data))
-  }
 
   const voteAnecdote = (id) => {
     dispatch(vote(id))
@@ -34,8 +28,7 @@ const App = () => {
     event.preventDefault()
     const content = event.target.content.value
     event.target.content.value = ''
-    const newNote = await anecdoteService.create(content)
-    dispatch(createAnecdote(newNote))
+    dispatch(createAnecdote(content))
   }
 
   const onFilterChange = (value) => {

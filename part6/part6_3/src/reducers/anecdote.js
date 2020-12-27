@@ -1,3 +1,4 @@
+import anecdoteService from '../services/anecdote'
 const anecdotesAtStart = [
   'If it hurts, do it more often',
   'Adding manpower to a late software project makes it later!',
@@ -24,19 +25,29 @@ const vote = (id) => ({
   }
 })
 
-const createAnecdote = (newAnec) => ({
-  type: 'CREATE',
-  payload: {
-    newAnec
+const createAnecdote = (content) => {
+  return async dispatch => {
+    const newAnec = await anecdoteService.create(content)
+    dispatch({
+      type: 'CREATE',
+      payload: {
+        newAnec
+      }
+    })
   }
-})
+}
 
-const setAnecdotes = (data) => ({
-  type: 'SET_ANECDOTES',
-  payload: {
-    data
+const getAnecdotes = () => {
+  return async dispatch => {
+    const data = await anecdoteService.getAll()
+    dispatch({
+      type: 'GET_ANECDOTES',
+      payload: {
+        data
+      }
+    })
   }
-})
+}
 
 const initialState = anecdotesAtStart.map(asObject).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
 
@@ -51,7 +62,7 @@ const reducer = (state = initialState, action) => {
       return cloneArray.sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
     case 'CREATE':
       return state.concat([action.payload.newAnec]).sort((nextAnec, prevAnect) => prevAnect.votes - nextAnec.votes)
-    case 'SET_ANECDOTES':
+    case 'GET_ANECDOTES':
       return action.payload.data
     default:
       return state
@@ -63,5 +74,5 @@ export default reducer
 export {
   vote,
   createAnecdote,
-  setAnecdotes,
+  getAnecdotes,
 }
