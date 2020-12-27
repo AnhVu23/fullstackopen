@@ -1,4 +1,6 @@
 import React from 'react'
+import {connect} from 'react-redux'
+import { updateFilter } from '../reducers/filter'
 
 const Filter = ({
     filter,
@@ -18,4 +20,12 @@ const Filter = ({
   )
 }
 
-export default Filter
+const mapStateToProps = state => ({
+  filter: state.filter
+})
+
+const mapDispatchToProps = dispatch => ({
+  onFilterChange: (filter) => dispatch(updateFilter(filter))
+})
+
+export default connect(mapStateToProps, mapDispatchToProps)(Filter)
