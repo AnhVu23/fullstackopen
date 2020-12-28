@@ -10,11 +10,12 @@ import authService from './services/auth'
 import './App.css'
 import { displayNotification } from './reducers/notification'
 import { createBlog, deleteBlog, getAllBlogs, updateBlog } from './reducers/blog'
+import { login, logout, saveUser } from './reducers/user'
 
 const App = () => {
   const blogs = useSelector(state => state.blog.blogs)
   const dispatch = useDispatch()
-  const [user, setUser] = useState(null)
+  const user = useSelector(state => state.user)
   const successMessage = useSelector((state) => state.notification.message)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -24,7 +25,7 @@ const App = () => {
     getBlogs()
     const user = window.localStorage.getItem('blogapp_user')
     if (user) {
-      setUser(JSON.parse(user))
+      dispatch(saveUser(user))
     }
   }, [])
 
@@ -34,20 +35,16 @@ const App = () => {
 
   const onLogin = async (data) => {
     try {
-      const res = await authService.login(data)
-      setUser({
-        username: res.data.username,
-        name: res.data.name,
-      })
+      await dispatch(login(data))
     } catch (e) {
+      console.log(e)
       setErrorMessage(e.response.data.error)
       setTimeout(() => setErrorMessage(null), 20000)
     }
   }
 
   const onLogoutClick = () => {
-    authService.logout()
-    setUser(null)
+    dispatch(logout())
   }
 
   const onBlogCreate = async (data) => {
@@ -126,7 +123,7 @@ const App = () => {
           <span className="error-message-text">{errorMessage}</span>
         </div>
       ) : null}
-      {user === null ? <Login onLogin={onLogin} /> : renderBlogs()}
+      {user.id === '' ? <Login onLogin={onLogin} /> : renderBlogs()}
     </div>
   )
 }
