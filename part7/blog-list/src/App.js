@@ -9,12 +9,13 @@ import authService from './services/auth'
 // Style
 import './App.css'
 import { displayNotification } from './reducers/notification'
+import { createBlog, deleteBlog, getAllBlogs, updateBlog } from './reducers/blog'
 
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [user, setUser] = useState(null)
-  const successMessage = useSelector((state) => state.notification)
+  const blogs = useSelector(state => state.blog.blogs)
   const dispatch = useDispatch()
+  const [user, setUser] = useState(null)
+  const successMessage = useSelector((state) => state.notification.message)
   const [errorMessage, setErrorMessage] = useState(null)
 
   const createBlogRef = React.useRef()
@@ -28,8 +29,7 @@ const App = () => {
   }, [])
 
   const getBlogs = async () => {
-    const blogs = await blogService.getAll()
-    setBlogs(blogs)
+    await dispatch(getAllBlogs())
   }
 
   const onLogin = async (data) => {
@@ -53,8 +53,7 @@ const App = () => {
   const onBlogCreate = async (data) => {
     try {
       createBlogRef.current.toggleVisibility()
-      const newBlog = await blogService.createOne(data)
-      setBlogs([...blogs, newBlog])
+      const newBlog = await dispatch(createBlog(data))
       dispatch(
         displayNotification(
           `a new blog ${newBlog.title} by ${newBlog.author} added`
@@ -77,7 +76,7 @@ const App = () => {
         delete clone.user.id
       }
       delete clone.id
-      await blogService.updateOne(blog.id, clone)
+      await dispatch(updateBlog(blog.id, clone))
       await getBlogs()
     } catch (e) {
       setErrorMessage(e.response ? e.response.data.error : e.message)
@@ -87,13 +86,7 @@ const App = () => {
 
   const onDeleteClick = async (id) => {
     try {
-      await blogService.deleteOne(id)
-      const foundBlogIndex = blogs.findIndex((blog) => blog.id === id)
-      if (foundBlogIndex !== -1) {
-        const cloneBlogs = [...blogs]
-        cloneBlogs.splice(foundBlogIndex, 1)
-        setBlogs(cloneBlogs)
-      }
+      await dispatch(deleteBlog(id))
     } catch (e) {
       setErrorMessage(e.response.data.error)
       setTimeout(() => setErrorMessage(null), 2000)
@@ -126,7 +119,6 @@ const App = () => {
         ))}
     </div>
   )
-
   return (
     <div>
       {errorMessage !== null ? (

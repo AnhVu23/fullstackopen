@@ -1,5 +1,5 @@
 const initialState = {
-  message: '',
+  message: null,
   isShown: false,
   timeoutId: null,
 }
@@ -37,7 +37,7 @@ const reducer = (state = initialState, action) => {
     case 'REMOVE_NOTIFICATION':
       return {
         ...state,
-        message: '',
+        message: null,
         isShown: false,
         timeoutId: null,
       }
