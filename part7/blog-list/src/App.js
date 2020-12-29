@@ -5,6 +5,7 @@ import Blog from './components/Blog'
 import Login from './components/Login'
 import BlogCreate from './components/BlogCreate'
 import Toggle from './components/Toggle'
+import UserList from './components/UserList'
 import User from './components/User'
 
 // Style
@@ -96,16 +97,6 @@ const App = () => {
   }
   const renderBlogs = () => (
     <div>
-      {successMessage !== null ? (
-        <div className="success-message">
-          <span className="success-message-text">{successMessage}</span>
-        </div>
-      ) : null}
-      <h2>Blogs</h2>
-      <div>
-        <span>{user.name} logged in</span>
-        <button onClick={onLogoutClick}>logout</button>
-      </div>
       <Toggle buttonLabel="new note" ref={createBlogRef}>
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
@@ -130,11 +121,19 @@ const App = () => {
             <span className="error-message-text">{errorMessage}</span>
           </div>
         ) : null}
+        <h2>Blogs</h2>
+        <div>
+          <span>{user.name} logged in</span>
+          <button onClick={onLogoutClick}>logout</button>
+        </div>
         <Switch>
           <Route exact path="/">
             {renderBlogs()}
           </Route>
           <Route exact path="/users">
+            <UserList />
+          </Route>
+          <Route exact path="/users/:id">
             <User/>
           </Route>
         </Switch>

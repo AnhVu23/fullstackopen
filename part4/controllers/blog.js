@@ -33,8 +33,10 @@ router
       if (!foundUser) {
         throw new NotFound(`Can't find user with this id`)
       }
-      blog.user = request.userId
+      blog.user = foundUser
       const result = await blog.save()
+      foundUser.blogs = foundUser.blogs.concat([result])
+      await foundUser.save()
       return response.status(201).json(result)
     } catch (e) {
       next(e)

@@ -1,6 +1,8 @@
 import React from 'react'
+import {useSelector} from 'react-redux'
 const Blog = ({ blog, onLikeClick, onDeleteClick }) => {
   const [visible, setVisible] = React.useState(false)
+  const user = useSelector(state => state.user)
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
@@ -14,9 +16,6 @@ const Blog = ({ blog, onLikeClick, onDeleteClick }) => {
       onDeleteClick(blog.id)
     }
   }
-
-  const currentUser = window.localStorage.getItem('blogapp_user')
-  const parsedUser = currentUser ? JSON.parse(currentUser) : null
   return (
     <div style={blogStyle}>
       <div>
@@ -35,7 +34,7 @@ const Blog = ({ blog, onLikeClick, onDeleteClick }) => {
             <button onClick={onLikeClick}>like</button>
           </div>
           <p>{blog.user ? blog.user.name : ''}</p>
-          {parsedUser && parsedUser.id === blog.user? (
+          {user && user.id === blog.user.id ? (
             <button
               type="button"
               style={{ backgroundColor: 'lightblue' }}
