@@ -1,21 +1,27 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
+import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import BlogCreate from './components/BlogCreate'
 import Toggle from './components/Toggle'
-import blogService from './services/blogs'
-import authService from './services/auth'
+import User from './components/User'
+
 // Style
 import './App.css'
 import { displayNotification } from './reducers/notification'
-import { createBlog, deleteBlog, getAllBlogs, updateBlog } from './reducers/blog'
+import {
+  createBlog,
+  deleteBlog,
+  getAllBlogs,
+  updateBlog,
+} from './reducers/blog'
 import { login, logout, saveUser } from './reducers/user'
 
 const App = () => {
-  const blogs = useSelector(state => state.blog.blogs)
+  const blogs = useSelector((state) => state.blog.blogs)
   const dispatch = useDispatch()
-  const user = useSelector(state => state.user)
+  const user = useSelector((state) => state.user)
   const successMessage = useSelector((state) => state.notification.message)
   const [errorMessage, setErrorMessage] = useState(null)
 
@@ -25,7 +31,7 @@ const App = () => {
     getBlogs()
     const user = window.localStorage.getItem('blogapp_user')
     if (user) {
-      dispatch(saveUser(user))
+      dispatch(saveUser(JSON.parse(user)))
     }
   }, [])
 
@@ -37,7 +43,6 @@ const App = () => {
     try {
       await dispatch(login(data))
     } catch (e) {
-      console.log(e)
       setErrorMessage(e.response.data.error)
       setTimeout(() => setErrorMessage(null), 20000)
     }
@@ -116,15 +121,40 @@ const App = () => {
         ))}
     </div>
   )
-  return (
-    <div>
-      {errorMessage !== null ? (
-        <div className="error-message">
-          <span className="error-message-text">{errorMessage}</span>
-        </div>
-      ) : null}
-      {user.id === '' ? <Login onLogin={onLogin} /> : renderBlogs()}
-    </div>
+
+  return user.id !== '' ? (
+    <Router>
+      <div>
+        {errorMessage !== null ? (
+          <div className="error-message">
+            <span className="error-message-text">{errorMessage}</span>
+          </div>
+        ) : null}
+        <Switch>
+          <Route exact path="/">
+            {renderBlogs()}
+          </Route>
+          <Route exact path="/users">
+            <User/>
+          </Route>
+        </Switch>
+      </div>
+    </Router>
+  ) : (
+    <Router>
+      <div>
+        {errorMessage !== null ? (
+          <div className="error-message">
+            <span className="error-message-text">{errorMessage}</span>
+          </div>
+        ) : null}
+        <Switch>
+          <Route path="/">
+            <Login onLogin={onLogin} />
+          </Route>
+        </Switch>
+      </div>
+    </Router>
   )
 }
 
