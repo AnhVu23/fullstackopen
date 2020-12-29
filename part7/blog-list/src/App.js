@@ -7,6 +7,7 @@ import BlogCreate from './components/BlogCreate'
 import Toggle from './components/Toggle'
 import UserList from './components/UserList'
 import User from './components/User'
+import BlogView from './components/BlogView'
 
 // Style
 import './App.css'
@@ -69,45 +70,19 @@ const App = () => {
     }
   }
 
-  const onLikeClick = async (blog) => {
-    try {
-      const clone = { ...blog }
-      clone.likes = clone.likes + 1
-      clone._id = blog.id
-      if (typeof clone.user !== 'string') {
-        clone.user._id = clone.user.id
-        delete clone.user.id
-      }
-      delete clone.id
-      await dispatch(updateBlog(blog.id, clone))
-      await getBlogs()
-    } catch (e) {
-      setErrorMessage(e.response ? e.response.data.error : e.message)
-      setTimeout(() => setErrorMessage(null), 2000)
-    }
-  }
 
-  const onDeleteClick = async (id) => {
-    try {
-      await dispatch(deleteBlog(id))
-    } catch (e) {
-      setErrorMessage(e.response.data.error)
-      setTimeout(() => setErrorMessage(null), 2000)
-    }
-  }
   const renderBlogs = () => (
     <div>
       <Toggle buttonLabel="new note" ref={createBlogRef}>
         <BlogCreate onBlogCreate={onBlogCreate} />
       </Toggle>
+      <div style={{height: 20}}/>
       {blogs
         .sort((prevBlog, nextBlog) => nextBlog.likes - prevBlog.likes)
         .map((blog) => (
           <Blog
             key={blog.id}
             blog={blog}
-            onLikeClick={() => onLikeClick(blog)}
-            onDeleteClick={onDeleteClick}
           />
         ))}
     </div>
@@ -135,6 +110,9 @@ const App = () => {
           </Route>
           <Route exact path="/users/:id">
             <User/>
+          </Route>
+          <Route path="/blogs/:id">
+            <BlogView/>
           </Route>
         </Switch>
       </div>

@@ -1,8 +1,7 @@
 import React, { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import { useParams } from 'react-router-dom'
-import { getAllUsers, logout } from '../reducers/user'
-import user from '../services/user'
+import { getAllUsers} from '../reducers/user'
 
 const User = () => {
   const dispatch = useDispatch()
