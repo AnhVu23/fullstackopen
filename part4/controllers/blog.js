@@ -3,14 +3,32 @@ const express = require('express')
 const router = express.Router()
 const Blog = require('../models/blog')
 const User = require('../models/user')
+const Comment = require('../models/comment')
 const middleware = require('../utils/middleware')
 
 /* GET users listing. */
 router.route('/').get(async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate('user')
+    const blogs = await Blog.find({}).populate('user').populate('comments')
     return response.json(blogs)
   } catch (e) {
+    next(e)
+  }
+})
+router.route('/:id/comments')
+.post(async (request, response, next) => {
+  try {
+    const foundBlog = await Blog.findById(request.params.id)
+    if (!foundBlog) {
+      throw new NotFound('Blog does not exist')
+    }
+    const newComment = new Comment(request.body)
+    newComment.blog = foundBlog
+    const comment = await newComment.save(request.body)
+    foundBlog.comments = foundBlog.comments.concat([comment])
+    await foundBlog.save()
+    return response.status(204).send()
+  } catch(e) {
     next(e)
   }
 })

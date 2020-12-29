@@ -42,6 +42,13 @@ const updateBlog = (id, data) => {
     }
 }
 
+const addComment = (id, text) => {
+    return async dispatch => {
+        await blogService.addComment(id, text)
+        dispatch(getAllBlogs())
+    }
+}
+
 const initialState = {
     blogs: []
 }
@@ -69,4 +76,5 @@ export {
     createBlog,
     updateBlog,
     deleteBlog,
+    addComment
 }

@@ -31,4 +31,8 @@ const deleteOne = async (id) => {
     },
   })
 }
-export default { getAll, createOne, updateOne, deleteOne }
+
+const addComment = async (id, text) => {
+  await axios.post(`${config.baseUrl}/api/blogs/${id}/comments`, {text})
+}
+export default { getAll, createOne, updateOne, deleteOne, addComment }
