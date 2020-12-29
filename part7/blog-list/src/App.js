@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useSelector, useDispatch } from 'react-redux'
-import { BrowserRouter as Router, Switch, Route } from 'react-router-dom'
+import { BrowserRouter as Router, Switch, Route, Link } from 'react-router-dom'
 import Blog from './components/Blog'
 import Login from './components/Login'
 import BlogCreate from './components/BlogCreate'
@@ -14,9 +14,7 @@ import './App.css'
 import { displayNotification } from './reducers/notification'
 import {
   createBlog,
-  deleteBlog,
   getAllBlogs,
-  updateBlog,
 } from './reducers/blog'
 import { login, logout, saveUser } from './reducers/user'
 
@@ -88,6 +86,21 @@ const App = () => {
     </div>
   )
 
+  const renderNav = () => {
+    return (
+      <div style={{backgroundColor: 'gray', display: 'flex', flexDirection: 'row'}}>
+        <nav>
+          <Link to='/'>blogs</Link>
+          <Link to='/users'>users</Link>
+        </nav>
+        <div>
+          <span>{user.name} logged in</span>
+          <button onClick={onLogoutClick}>logout</button>
+        </div>
+      </div>
+    )
+  }
+
   return user.id !== '' ? (
     <Router>
       <div>
@@ -96,11 +109,8 @@ const App = () => {
             <span className="error-message-text">{errorMessage}</span>
           </div>
         ) : null}
-        <h2>Blogs</h2>
-        <div>
-          <span>{user.name} logged in</span>
-          <button onClick={onLogoutClick}>logout</button>
-        </div>
+        {renderNav()}
+        <h2>blog app</h2>
         <Switch>
           <Route exact path="/">
             {renderBlogs()}
