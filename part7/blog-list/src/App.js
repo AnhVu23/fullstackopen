@@ -115,6 +115,11 @@ const App = () => {
             <span className="error-message-text">{errorMessage}</span>
           </div>
         ) : null}
+        {successMessage!== null ? (
+          <div className="success-message">
+            <span className="success-message-text">{successMessage}</span>
+          </div>
+        ) : null}
         {renderNav()}
         <Typography component='h2' variant='h2'>blog app</Typography>
         <Switch>
