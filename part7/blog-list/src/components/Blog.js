@@ -1,5 +1,6 @@
 import React from 'react'
-import {Link} from 'react-router-dom'
+
+import {Button, Link} from '@material-ui/core'
 const Blog = ({blog}) => {
   const blogStyle = {
     border: 'solid',
@@ -13,11 +14,11 @@ const Blog = ({blog}) => {
   }
 
   return (
-    <Link style={blogStyle} to={`/blogs/${blog.id}`}>
+    <Button style={blogStyle} href={`/blogs/${blog.id}`} component={Link}>
         <span className="blog-title">
           {blog.title} {blog.author}
         </span>
-    </Link>
+    </Button>
   )
 }
 export default Blog

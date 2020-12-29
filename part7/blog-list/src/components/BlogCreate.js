@@ -1,4 +1,5 @@
 import React, { useState } from 'react'
+import {Button, TextField, Typography} from '@material-ui/core'
 const initialBlogState = {
   title: '',
   author: '',
@@ -19,20 +20,20 @@ const BlogCreate = ({ onBlogCreate }) => {
 
   return (
     <form onSubmit={onFormSubmit}>
-      <h2>create new</h2>
+      <Typography variant='h2' component='h2'>create new</Typography>
       <div>
-        <span>title</span>
-        <input value={blogForm.title} name="title" onChange={onInputChange} />
+        <Typography variant='body1' component='span'>title</Typography>
+        <TextField value={blogForm.title} name="title" onChange={onInputChange} />
       </div>
       <div>
-        <span>author</span>
-        <input value={blogForm.author} name="author" onChange={onInputChange} />
+      <Typography variant='body1' component='span'>author</Typography>
+        <TextField value={blogForm.author} name="author" onChange={onInputChange} />
       </div>
       <div>
-        <span>url</span>
-        <input value={blogForm.url} name="url" onChange={onInputChange} />
+      <Typography variant='body1' component='span'>url</Typography>
+        <TextField value={blogForm.url} name="url" onChange={onInputChange} />
       </div>
-      <button type="submit">create</button>
+      <Button type="submit" color='primary'>create</Button>
     </form>
   )
 }

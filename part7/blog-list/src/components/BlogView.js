@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
+import {Typography, Button, TextField, Container, Link} from '@material-ui/core'
 import { useParams } from 'react-router-dom'
 import {
   getAllBlogs,
@@ -42,40 +43,40 @@ const BlogView = () => {
 
   if (!selectedBlog) return null
   return (
-    <div>
-      <h2>
+    <Container>
+      <Typography variant='h3' component='h3'>
         {selectedBlog.title} {selectedBlog.author}
-      </h2>
-      <a href={selectedBlog.url} target="_blank">
+      </Typography>
+      <Link href={selectedBlog.url} target="_blank">
         {selectedBlog.url}
-      </a>
+      </Link>
       <div>
-        <span>{selectedBlog.likes} likes</span>
-        <button onClick={onLikeClick}>like</button>
+        <Typography variant='body1' component='span'>{selectedBlog.likes} likes</Typography>
+        <Button onClick={onLikeClick}>like</Button>
       </div>
-      <p>Added by {selectedBlog.user.name}</p>
+      <Typography variant='body1' component='p'>Added by {selectedBlog.user.name}</Typography>
       {user && user.id === selectedBlog.user.id ? (
-        <button
+        <Button
           type="button"
           style={{ backgroundColor: 'lightblue' }}
           onClick={onDeleteClick}
         >
           remove
-        </button>
+        </Button>
       ) : null}
-      <h2>comments</h2>
+      <Typography variant='h3' component='h3'>comments</Typography>
       <div>
-        <input value={comment} onChange={(e) => setComment(e.target.value)} />
-        <button onClick={() => dispatch(addComment(selectedBlog.id, comment))}>
+        <TextField value={comment} onChange={(e) => setComment(e.target.value)} />
+        <Button onClick={() => dispatch(addComment(selectedBlog.id, comment))}>
           add comment
-        </button>
+        </Button>
       </div>
       <ul>
         {selectedBlog.comments.map((comment) => (
           <li key={comment.id}>{comment.text}</li>
         ))}
       </ul>
-    </div>
+    </Container>
   )
 }
 
